@@ -8,44 +8,84 @@ $(document).ready(function () {
 
   var game = new Game(canvas);
 
-  var coin = new Sprite({
-    src: 'img/coin.png',
-    frames: 10
+  $(window).resize(function () {
+    canvas.width = $('body').width();
+    canvas.height = $('body').height();
+    game.resize();
   });
 
-  var numbers = new Sprite({
+  coin = new Sprite({
+    src: 'img/coin.png',
+    frames: 10,
+    frameWidth: 44,
+    frameHeight: 40
+  });
+
+  numbers = new Sprite({
     src: 'img/numbers.png',
-    frames: 5
+    frames: 5,
+    frameWidth: 80,
+    frameHeight: 80
   });
 
   var t = 0.0;
-  var dt = 1.0 / 60.0;
 
-  setInterval(function () {
+  var velocity = { x: 0.0, y: 0.0 };
 
-    if(Input.isKeyDown(Input.KEY_UP)) pos.y -= 2.0;
-    if(Input.isKeyDown(Input.KEY_DOWN)) pos.y += 2.0;
-    if(Input.isKeyDown(Input.KEY_LEFT)) pos.x -= 2.0;
-    if(Input.isKeyDown(Input.KEY_RIGHT)) pos.x += 2.0;
+  game.updateFunction = function (dt) {
+
+    dt /= 1000.0;
+    if(dt <= 0 || dt != dt) return;
+
+    velocity.x = 0.0;
+
+    if(Input.isKeyDown(Input.KEY_UP)) if(velocity.y == 0.0) velocity.y = -1200.0;
+    if(Input.isKeyDown(Input.KEY_LEFT)) velocity.x = -512.0;
+    if(Input.isKeyDown(Input.KEY_RIGHT)) velocity.x = 512.0;
+
+    // Physics!
+    velocity.y += 2000 * dt;
+    pos.x += velocity.x * dt;
+    pos.y += velocity.y * dt;
+    if(pos.y >= 500) {
+      pos.y = 500;
+      velocity.y = 0.0;
+    }
 
     t += dt;
-    x = pos.x + 100.0 * Math.cos(2.0 * Math.PI * t / 10.0);
-    y = pos.y + 100.0 * Math.sin(2.0 * Math.PI * t / 10.0);
 
+  };
+
+  game.renderFunction = function () {
     game.clear('#bbeeff');
 
-    coin.offset.x = -coin.width / 2;
-    coin.offset.y = -coin.height / 2;
-    numbers.offset.x = -numbers.width / 2;
-    numbers.offset.y = -numbers.height / 2;
+    x = pos.x + 100.0 * Math.cos(2.0 * Math.PI * t / 2.0);
+    y = pos.y + 100.0 * Math.sin(2.0 * Math.PI * t / 2.0);
 
-    coin.setFrame(Math.floor(t / dt / 10.0));
+    coin.setFrame(Math.floor(t * 30.0));
     coin.draw(game, x, y);
     coin.draw(game, 2 * pos.x - x, 2 * pos.y - y);
 
-    numbers.setFrame(Math.floor(t / dt / 60.0));
+    numbers.setFrame(Math.floor(t * 2.0));
     numbers.draw(game, pos.x, pos.y);
 
-  }, dt / 1000.0);
+  }
+
+  var TTT = setInterval(function () {
+    if(!coin.loaded || !numbers.loaded) {
+      console.log('Loading...');
+      return false;
+    }
+
+    // Setup
+    coin.offset.x = -coin.frameWidth / 2;
+    coin.offset.y = -coin.frameHeight / 2;
+    numbers.offset.x = -numbers.frameWidth / 2;
+    numbers.offset.y = -numbers.frameHeight / 2;
+
+    game.start();
+
+    clearInterval(TTT);
+  }, 100);
 
 });
