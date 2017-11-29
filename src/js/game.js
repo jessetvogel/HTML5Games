@@ -9,6 +9,9 @@ var Game = function (canvas) {
   this.updateFunction = function () {};
   this.renderFunction = function () {};
 
+  // Disable right-clicking
+  canvas.addEventListener('contextmenu', event => event.preventDefault());
+
   // State variables
   this.running = false;
 };

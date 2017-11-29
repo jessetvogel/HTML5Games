@@ -1,35 +1,49 @@
-var pos = { x: 200, y: 200 };
-
 $(document).ready(function () {
-
+  // Get canvas
   var canvas = document.getElementById('canvas');
   canvas.width = $('body').width();
   canvas.height = $('body').height();
 
+  // Create game
   var game = new Game(canvas);
 
+  // Resizing should invoke game.resize
   $(window).resize(function () {
     canvas.width = $('body').width();
     canvas.height = $('body').height();
     game.resize();
   });
 
-  coin = new Sprite({
+  // Create camera
+  var camera = new Camera(game, {
+    x: 0.0,
+    y: 0.0,
+    zoom: 1.0
+  });
+
+  // Load sprites
+  coin = new Sprite(game, {
     src: 'img/coin.png',
     frames: 10,
     frameWidth: 44,
-    frameHeight: 40
+    frameHeight: 40,
+    offset: { x: -22, y: -20 },
+    scale: { x: 1 / 80, y: 1 / 80 }
   });
 
-  numbers = new Sprite({
+  numbers = new Sprite(game, {
     src: 'img/numbers.png',
     frames: 5,
     frameWidth: 80,
-    frameHeight: 80
+    frameHeight: 80,
+    offset: { x: -40, y: -40 },
+    scale: { x: 1 / 80, y : 1 / 80 }
   });
+
 
   var t = 0.0;
 
+  var position = { x: 0.0, y: 0.0 };
   var velocity = { x: 0.0, y: 0.0 };
 
   game.updateFunction = function (dt) {
@@ -39,16 +53,24 @@ $(document).ready(function () {
 
     velocity.x = 0.0;
 
-    if(Input.isKeyDown(Input.KEY_UP)) if(velocity.y == 0.0) velocity.y = -1200.0;
-    if(Input.isKeyDown(Input.KEY_LEFT)) velocity.x = -512.0;
-    if(Input.isKeyDown(Input.KEY_RIGHT)) velocity.x = 512.0;
+    // Controls
+    if(Input.isKeyDown(Input.KEY_UP)) if(velocity.y == 0.0) velocity.y = -10.0;
+    if(Input.isKeyDown(Input.KEY_LEFT)) velocity.x = -5.0;
+    if(Input.isKeyDown(Input.KEY_RIGHT)) velocity.x = 5.0;
+
+    // Camera movement
+    camera.zoom = Math.pow(1.005, Input.getMouseWheel()) * 80.0;
+    if(Input.isKeyDown(Input.keyCode['W'])) camera.y -= 3.0 * dt;
+    if(Input.isKeyDown(Input.keyCode['A'])) camera.x -= 3.0 * dt;
+    if(Input.isKeyDown(Input.keyCode['S'])) camera.y += 3.0 * dt;
+    if(Input.isKeyDown(Input.keyCode['D'])) camera.x += 3.0 * dt;
 
     // Physics!
-    velocity.y += 2000 * dt;
-    pos.x += velocity.x * dt;
-    pos.y += velocity.y * dt;
-    if(pos.y >= 500) {
-      pos.y = 500;
+    velocity.y += 30.0 * dt;
+    position.x += velocity.x * dt;
+    position.y += velocity.y * dt;
+    if(position.y >= 0.0) {
+      position.y = 0.0;
       velocity.y = 0.0;
     }
 
@@ -59,33 +81,18 @@ $(document).ready(function () {
   game.renderFunction = function () {
     game.clear('#bbeeff');
 
-    x = pos.x + 100.0 * Math.cos(2.0 * Math.PI * t / 2.0);
-    y = pos.y + 100.0 * Math.sin(2.0 * Math.PI * t / 2.0);
+    x = position.x + 1.5 * Math.cos(2.0 * Math.PI * t / 2.0);
+    y = position.y + 1.5 * Math.sin(2.0 * Math.PI * t / 2.0);
 
     coin.setFrame(Math.floor(t * 30.0));
-    coin.draw(game, x, y);
-    coin.draw(game, 2 * pos.x - x, 2 * pos.y - y);
+    coin.draw(x, y, camera);
+    coin.draw(2 * position.x - x, 2 * position.y - y, camera);
 
     numbers.setFrame(Math.floor(t * 2.0));
-    numbers.draw(game, pos.x, pos.y);
+    numbers.draw(position.x, position.y, camera);
 
   }
 
-  var TTT = setInterval(function () {
-    if(!coin.loaded || !numbers.loaded) {
-      console.log('Loading...');
-      return false;
-    }
-
-    // Setup
-    coin.offset.x = -coin.frameWidth / 2;
-    coin.offset.y = -coin.frameHeight / 2;
-    numbers.offset.x = -numbers.frameWidth / 2;
-    numbers.offset.y = -numbers.frameHeight / 2;
-
-    game.start();
-
-    clearInterval(TTT);
-  }, 100);
+  game.start();
 
 });
