@@ -5,7 +5,7 @@ $(document).ready(function () {
   canvas.height = $('body').height();
 
   // Create game
-  var game = new Game(canvas);
+  game = new Game(canvas);
 
   // Resizing should invoke game.resize
   $(window).resize(function () {
@@ -22,7 +22,7 @@ $(document).ready(function () {
   });
 
   // Load sprites
-  coin = new Sprite(game, {
+  var coin = new Sprite(game, {
     src: 'img/coin.png',
     frames: 10,
     frameWidth: 44,
@@ -31,7 +31,7 @@ $(document).ready(function () {
     scale: { x: 1 / 80, y: 1 / 80 }
   });
 
-  numbers = new Sprite(game, {
+  var numbers = new Sprite(game, {
     src: 'img/numbers.png',
     frames: 5,
     frameWidth: 80,
@@ -40,6 +40,11 @@ $(document).ready(function () {
     scale: { x: 1 / 80, y : 1 / 80 }
   });
 
+  // Create texts
+  var text = new Text(game, {
+    text: 'Hello world! :D',
+    align: 'center'
+  });
 
   var t = 0.0;
 
@@ -91,6 +96,8 @@ $(document).ready(function () {
     numbers.setFrame(Math.floor(t * 2.0));
     numbers.draw(position.x, position.y, camera);
 
+    text.setColor('hsl(' + Math.floor((t * 360) % 360) + ', 100%, 50%)');
+    text.draw(position.x, position.y - 2.0, camera);
   }
 
   game.start();

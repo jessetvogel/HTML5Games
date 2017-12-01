@@ -7,12 +7,12 @@ var Input = {
 
 // Event listeners
 $(document).ready(function () {
-  $(document).keydown(function (event) { Input.keyState[event.keyCode] = Input.STATE_DOWN; });
-  $(document).keyup(function (event) { Input.keyState[event.keyCode] = Input.STATE_UP; });
-  $(document).mousedown(function (event) { Input.mouseState[event.which] = Input.STATE_DOWN; })
-  $(document).mouseup(function (event) { Input.mouseState[event.which] = Input.STATE_UP; })
-  $(document).mousemove(function (event) { Input.mousePosition.x = event.pageX; Input.mousePosition.y = event.pageY; });
-  $(window).bind('mousewheel', function(event) { Input.mouseWheel += event.originalEvent.wheelDelta / 120.0; /* TODO: 120.0? */ });
+  document.addEventListener('keydown', function (event) { Input.keyState[event.keyCode] = Input.STATE_DOWN; });
+  document.addEventListener('keyup', function (event) { Input.keyState[event.keyCode] = Input.STATE_UP; });
+  document.addEventListener('mousedown', function (event) { Input.mouseState[event.which] = Input.STATE_DOWN; })
+  document.addEventListener('mouseup', function (event) { Input.mouseState[event.which] = Input.STATE_UP; })
+  document.addEventListener('mousemove', function (event) { Input.mousePosition.x = event.pageX; Input.mousePosition.y = event.pageY; });
+  window.addEventListener('mousewheel', function(event) { Input.mouseWheel += event.wheelDelta / 120.0; /* TODO: 120.0? */ });
 });
 
 // Get state methods
