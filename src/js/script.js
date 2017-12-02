@@ -43,7 +43,18 @@ $(document).ready(function () {
   // Create texts
   var text = new Text(game, {
     text: 'Hello world! :D',
-    align: 'center'
+    align: 'center',
+    baseline: 'middle',
+    font: '20px VT323',
+    color: 'white'
+  });
+
+  // Create shapes
+  var shape = new Shape(game, {
+    type: 'rectangle',
+    width: 3.0,
+    height: 1.0,
+    color: 'black'
   });
 
   var t = 0.0;
@@ -96,8 +107,12 @@ $(document).ready(function () {
     numbers.setFrame(Math.floor(t * 2.0));
     numbers.draw(position.x, position.y, camera);
 
-    text.setColor('hsl(' + Math.floor((t * 360) % 360) + ', 100%, 50%)');
-    text.draw(position.x, position.y - 2.0, camera);
+    game.context.globalAlpha = 0.4;
+    shape.draw(-1.5, -2.5, camera);
+    game.context.globalAlpha = 1.0;
+
+    text.draw(0.0, - 2.0, camera);
+
   }
 
   game.start();

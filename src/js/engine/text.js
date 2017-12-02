@@ -4,9 +4,10 @@ var Text = function (game, options) {
 
   // Set default properties
   this.text = '';
-  this.font = '30px Comic Sans MS';
+  this.font = '10px sans-serif';
   this.color = 'black';
   this.align = 'left';
+  this.baseline = 'alphabetic';
 
   // Set custom properties
   for(var x in options) this[x] = options[x];
@@ -22,6 +23,7 @@ Text.prototype.draw = function (x, y, camera = null) {
   this.game.context.font = this.font;
   this.game.context.fillStyle = this.color;
   this.game.context.textAlign = this.align;
+  this.game.context.textBaseline = this.baseline;
   this.game.context.fillText(this.text, coordinates.x, coordinates.y);
 };
 
