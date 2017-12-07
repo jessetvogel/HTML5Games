@@ -45,7 +45,8 @@ $(document).ready(function () {
     text: 'Hello world! :D',
     align: 'center',
     baseline: 'middle',
-    font: '20px VT323',
+    font: 'VT323',
+    size: '20px',
     color: 'white'
   });
 
@@ -111,6 +112,7 @@ $(document).ready(function () {
     shape.draw(-1.5, -2.5, camera);
     game.context.globalAlpha = 1.0;
 
+    text.setSize(20 * camera.zoom / 80.0);
     text.draw(0.0, - 2.0, camera);
 
   }

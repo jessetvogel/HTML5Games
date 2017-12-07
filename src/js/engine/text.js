@@ -4,7 +4,8 @@ var Text = function (game, options) {
 
   // Set default properties
   this.text = '';
-  this.font = '10px sans-serif';
+  this.font = 'sans-serif';
+  this.size = 10;
   this.color = 'black';
   this.align = 'left';
   this.baseline = 'alphabetic';
@@ -20,7 +21,7 @@ Text.prototype.draw = function (x, y, camera = null) {
     camera.transform(coordinates);
 
   // Render text
-  this.game.context.font = this.font;
+  this.game.context.font = this.size + 'px ' + this.font;
   this.game.context.fillStyle = this.color;
   this.game.context.textAlign = this.align;
   this.game.context.textBaseline = this.baseline;
@@ -29,6 +30,10 @@ Text.prototype.draw = function (x, y, camera = null) {
 
 Text.prototype.setFont = function (font) {
   this.font = font;
+};
+
+Text.prototype.setSize = function (size) {
+  this.size = size;
 };
 
 Text.prototype.setColor = function (color) {
