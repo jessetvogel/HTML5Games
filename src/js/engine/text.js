@@ -17,11 +17,14 @@ var Text = function (game, options) {
 Text.prototype.draw = function (x, y, camera = null) {
   // Determine coordinates
   var coordinates = { x: x, y: y };
-  if(camera != null)
+  var size = this.size;
+  if(camera != null) {
     camera.transform(coordinates);
+    size *= camera.zoom;
+  }
 
   // Render text
-  this.game.context.font = this.size + 'px ' + this.font;
+  this.game.context.font = size + 'px ' + this.font;
   this.game.context.fillStyle = this.color;
   this.game.context.textAlign = this.align;
   this.game.context.textBaseline = this.baseline;

@@ -46,7 +46,7 @@ $(document).ready(function () {
     align: 'center',
     baseline: 'middle',
     font: 'VT323',
-    size: '20px',
+    size: 0.3,
     color: 'white'
   });
 
@@ -112,7 +112,6 @@ $(document).ready(function () {
     shape.draw(-1.5, -2.5, camera);
     game.context.globalAlpha = 1.0;
 
-    text.setSize(20 * camera.zoom / 80.0);
     text.draw(0.0, - 2.0, camera);
 
   }
