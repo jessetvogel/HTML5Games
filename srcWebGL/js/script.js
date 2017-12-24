@@ -173,7 +173,7 @@ function drawScene(gl, programInfo, buffers) {
 
   mat4.translate(modelViewMatrix,     // destination matrix
                  modelViewMatrix,     // matrix to translate
-                 [-0.0, 0.0, -6.0]);  // amount to translate
+                 [-1.5, 0.0, -6.0]);  // amount to translate
 
   mat4.rotateZ(modelViewMatrix,
               modelViewMatrix,
@@ -226,6 +226,12 @@ function drawScene(gl, programInfo, buffers) {
     const offset = 0;
     const vertexCount = 4;
     gl.drawArrays(gl.TRIANGLE_STRIP, offset, vertexCount);
+
+    mat4.identity(modelViewMatrix);
+
+    mat4.translate(modelViewMatrix,
+                   modelViewMatrix,
+                   [1.5, 0.0, -6.0]);
 
     mat4.rotateY(modelViewMatrix,
                modelViewMatrix,
